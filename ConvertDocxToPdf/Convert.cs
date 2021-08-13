@@ -31,6 +31,7 @@ namespace ConvertDocxToPdf
                     else
                     {
                         lblFileConvert.Text = "Tìm Thấy : " + files.Length.ToString() + " file .docx cần chọn lại thư mục chứa file";
+                        txtInput.Text = fbd.SelectedPath;
                     }
                 }
             }
@@ -52,17 +53,13 @@ namespace ConvertDocxToPdf
         private void btnConvert_Click(object sender, EventArgs e)
         {
 
-            if(txtInput.Text != "" && txtOutPut.Text !="")
+            if (txtInput.Text != "" && txtOutPut.Text != "")
             {
                 btnConvert.Enabled = false;
                 progressBarConvert.Visible = true;
                 if (CreatePDF(txtInput.Text, txtOutPut.Text))
                 {
                     lblFileConvert.Text = "Xong";
-                }
-                else
-                {
-                    lblFileConvert.Text = "Lỗi";
                 }
 
                 btnConvert.Enabled = true;
@@ -81,44 +78,50 @@ namespace ConvertDocxToPdf
             app.Visible = false;
 
             string[] files = System.IO.Directory.GetFiles(path, "*.docx");
+            int max = files.Length;
             progressBarConvert.Minimum = 0;
-            progressBarConvert.Maximum = files.Length;
+            progressBarConvert.Maximum = max;
             int valueProcess = 0;
-
-            foreach (var file in files)
+            if (max > 0)
             {
-                valueProcess += 1;
-                lblFileConvert.Text = "Đang Convert File: " + Path.GetFileName(file);
-                progressBarConvert.Value = valueProcess;
-                var objPresSet = app.Documents;
-                var objPres = objPresSet.Open(file, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
-
-                var pdfFileName = Path.ChangeExtension(file, ".pdf");
-
-                var pdfPath = Path.Combine(pdfFileName, exportDir + "\\" + Path.GetFileName(pdfFileName));
-
-                try
+                foreach (var file in files)
                 {
-                    objPres.ExportAsFixedFormat(
-                        pdfPath,
-                        WdExportFormat.wdExportFormatPDF,
-                        false,
-                        WdExportOptimizeFor.wdExportOptimizeForPrint,
-                        WdExportRange.wdExportAllDocument
-                    );
-                }
-                catch
-                {
-                    lblFileConvert.Text = "Lỗi convert file:" + file;
+                    valueProcess += 1;
+                    lblFileConvert.Text = "Đang Convert File: " + valueProcess + "/" + max +": " + Path.GetFileName(file);
+                    progressBarConvert.Value = valueProcess;
+                    var objPresSet = app.Documents;
+                    var objPres = objPresSet.Open(file, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
 
-                    return false;
-                }
-                finally
-                {
-                    objPres.Close();
+                    var pdfFileName = Path.ChangeExtension(file, ".pdf");
+
+                    var pdfPath = Path.Combine(pdfFileName, exportDir + "\\" + Path.GetFileName(pdfFileName));
+
+                    try
+                    {
+                        objPres.ExportAsFixedFormat(
+                            pdfPath,
+                            WdExportFormat.wdExportFormatPDF,
+                            false,
+                            WdExportOptimizeFor.wdExportOptimizeForPrint,
+                            WdExportRange.wdExportAllDocument
+                        );
+                    }
+                    catch
+                    {
+                        lblFileConvert.Text = "Lỗi convert file:" + file;
+                        return false;
+                    }
+                    finally
+                    {
+                        objPres.Close();
+                    }
                 }
             }
-
+            else
+            {
+                lblFileConvert.Text = "Lỗi không có file để convert";
+                return false;
+            }
             return true;
         }
     }
