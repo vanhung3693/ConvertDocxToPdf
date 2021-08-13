@@ -87,7 +87,7 @@ namespace ConvertDocxToPdf
                 foreach (var file in files)
                 {
                     valueProcess += 1;
-                    lblFileConvert.Text = "Đang Convert File: " + valueProcess + "/" + max +": " + Path.GetFileName(file);
+                    lblFileConvert.Text = "Đang Convert File: " + valueProcess + "/" + max + ": " + Path.GetFileName(file);
                     progressBarConvert.Value = valueProcess;
                     var objPresSet = app.Documents;
                     var objPres = objPresSet.Open(file, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
@@ -114,6 +114,79 @@ namespace ConvertDocxToPdf
                     finally
                     {
                         objPres.Close();
+                    }
+                }
+            }
+            else
+            {
+                lblFileConvert.Text = "Lỗi không có file để convert";
+                return false;
+            }
+            return true;
+        }
+
+        private void btnToImage_Click(object sender, EventArgs e)
+        {
+            if (txtInput.Text != "" && txtOutPut.Text != "")
+            {
+                btnConvert.Enabled = false;
+                progressBarConvert.Visible = true;
+                if (CreatePNG(txtInput.Text, txtOutPut.Text))
+                {
+                    lblFileConvert.Text = "Xong";
+                }
+
+                btnConvert.Enabled = true;
+            }
+            else
+            {
+                lblFileConvert.Text = "Bạn chưa chọn thư mục chứa file docx hoặc lưu file";
+            }
+        }
+
+        private bool CreatePNG(string path, string exportDir)
+        {
+            Application app = new Application();
+            app.DisplayAlerts = WdAlertLevel.wdAlertsNone;
+            app.Visible = false;
+
+            string[] files = System.IO.Directory.GetFiles(path, "*.docx");
+            int max = files.Length;
+            progressBarConvert.Minimum = 0;
+            progressBarConvert.Maximum = max;
+            int valueProcess = 0;
+            if (max > 0)
+            {
+                foreach (var file in files)
+                {
+                    valueProcess += 1;
+                    lblFileConvert.Text = "Đang Convert File: " + valueProcess + "/" + max + ": " + Path.GetFileName(file);
+                    progressBarConvert.Value = valueProcess;
+                    var objPresSet = app.Documents;
+                    var objPres = objPresSet.Open(file, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
+
+                    foreach (Window window in objPres.Windows)
+                    {
+                        foreach (Pane pane in window.Panes)
+                        {
+                            for (var i = 1; i <= pane.Pages.Count; i++)
+                            {
+                                var imageFileName = Path.ChangeExtension(file, ".png");
+                                var imagePath = Path.Combine(imageFileName, exportDir + "\\" + Path.GetFileName(imageFileName));
+                                var bits = pane.Pages[i].EnhMetaFileBits;
+                                try
+                                {
+                                    using (var ms = new System.IO.MemoryStream((byte[])(bits)))
+                                    {
+                                        var image = System.Drawing.Image.FromStream(ms,true);
+                                        image.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+
+                                    }
+                                }
+                                catch (System.Exception ex)
+                                { }
+                            }
+                        }
                     }
                 }
             }

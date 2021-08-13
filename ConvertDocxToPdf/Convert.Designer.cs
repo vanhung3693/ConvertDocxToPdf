@@ -40,6 +40,7 @@ namespace ConvertDocxToPdf
             this.btnConvert = new System.Windows.Forms.Button();
             this.progressBarConvert = new System.Windows.Forms.ProgressBar();
             this.lblFileConvert = new System.Windows.Forms.Label();
+            this.btnToImage = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -140,11 +141,22 @@ namespace ConvertDocxToPdf
             this.lblFileConvert.Size = new System.Drawing.Size(0, 13);
             this.lblFileConvert.TabIndex = 9;
             // 
+            // btnToImage
+            // 
+            this.btnToImage.Location = new System.Drawing.Point(329, 115);
+            this.btnToImage.Name = "btnToImage";
+            this.btnToImage.Size = new System.Drawing.Size(75, 23);
+            this.btnToImage.TabIndex = 10;
+            this.btnToImage.Text = "To Image";
+            this.btnToImage.UseVisualStyleBackColor = true;
+            this.btnToImage.Click += new System.EventHandler(this.btnToImage_Click);
+            // 
             // Convert
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(556, 176);
+            this.Controls.Add(this.btnToImage);
             this.Controls.Add(this.lblFileConvert);
             this.Controls.Add(this.progressBarConvert);
             this.Controls.Add(this.btnConvert);
@@ -177,5 +189,6 @@ namespace ConvertDocxToPdf
         private System.Windows.Forms.Button btnConvert;
         private System.Windows.Forms.ProgressBar progressBarConvert;
         private System.Windows.Forms.Label lblFileConvert;
+        private System.Windows.Forms.Button btnToImage;
     }
 }
