@@ -25,12 +25,12 @@ namespace ConvertDocxToPdf
                     string[] files = Directory.GetFiles(fbd.SelectedPath, "*.docx");
                     if (files.Length > 0)
                     {
-                        System.Windows.Forms.MessageBox.Show("Tìm Thấy : " + files.Length.ToString() + " file .docx", "Thông Báo");
+                        lblFileConvert.Text = "Tìm Thấy : " + files.Length.ToString() + " file .docx";
                         txtInput.Text = fbd.SelectedPath;
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("Tìm Thấy : " + files.Length.ToString() + " file .docx cần chọn lại thư mục chứa file", "Thông Báo");
+                        lblFileConvert.Text = "Tìm Thấy : " + files.Length.ToString() + " file .docx cần chọn lại thư mục chứa file";
                     }
                 }
             }
@@ -55,12 +55,21 @@ namespace ConvertDocxToPdf
             if(txtInput.Text != "" && txtOutPut.Text !="")
             {
                 btnConvert.Enabled = false;
-                CreatePDF(txtInput.Text, txtOutPut.Text);
+                progressBarConvert.Visible = true;
+                if (CreatePDF(txtInput.Text, txtOutPut.Text))
+                {
+                    lblFileConvert.Text = "Xong";
+                }
+                else
+                {
+                    lblFileConvert.Text = "Lỗi";
+                }
+
                 btnConvert.Enabled = true;
             }
             else
             {
-                MessageBox.Show("Bạn chưa chọn thư mục chứa file docx hoặc lưu file","Thông Báo");
+                lblFileConvert.Text = "Bạn chưa chọn thư mục chứa file docx hoặc lưu file";
             }
 
         }
@@ -72,9 +81,15 @@ namespace ConvertDocxToPdf
             app.Visible = false;
 
             string[] files = System.IO.Directory.GetFiles(path, "*.docx");
+            progressBarConvert.Minimum = 0;
+            progressBarConvert.Maximum = files.Length;
+            int valueProcess = 0;
 
             foreach (var file in files)
             {
+                valueProcess += 1;
+                lblFileConvert.Text = "Đang Convert File: " + Path.GetFileName(file);
+                progressBarConvert.Value = valueProcess;
                 var objPresSet = app.Documents;
                 var objPres = objPresSet.Open(file, MsoTriState.msoTrue, MsoTriState.msoTrue, MsoTriState.msoFalse);
 
@@ -94,6 +109,8 @@ namespace ConvertDocxToPdf
                 }
                 catch
                 {
+                    lblFileConvert.Text = "Lỗi convert file:" + file;
+
                     return false;
                 }
                 finally

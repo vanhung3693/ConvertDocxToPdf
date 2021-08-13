@@ -38,6 +38,8 @@ namespace ConvertDocxToPdf
             this.txtOutPut = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnConvert = new System.Windows.Forms.Button();
+            this.progressBarConvert = new System.Windows.Forms.ProgressBar();
+            this.lblFileConvert = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -114,7 +116,7 @@ namespace ConvertDocxToPdf
             // 
             // btnConvert
             // 
-            this.btnConvert.Location = new System.Drawing.Point(237, 101);
+            this.btnConvert.Location = new System.Drawing.Point(235, 115);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(75, 23);
             this.btnConvert.TabIndex = 7;
@@ -122,11 +124,29 @@ namespace ConvertDocxToPdf
             this.btnConvert.UseVisualStyleBackColor = true;
             this.btnConvert.Click += new System.EventHandler(this.btnConvert_Click);
             // 
+            // progressBarConvert
+            // 
+            this.progressBarConvert.Location = new System.Drawing.Point(16, 145);
+            this.progressBarConvert.Name = "progressBarConvert";
+            this.progressBarConvert.Size = new System.Drawing.Size(523, 5);
+            this.progressBarConvert.TabIndex = 8;
+            this.progressBarConvert.Visible = false;
+            // 
+            // lblFileConvert
+            // 
+            this.lblFileConvert.AutoSize = true;
+            this.lblFileConvert.Location = new System.Drawing.Point(16, 158);
+            this.lblFileConvert.Name = "lblFileConvert";
+            this.lblFileConvert.Size = new System.Drawing.Size(0, 13);
+            this.lblFileConvert.TabIndex = 9;
+            // 
             // Convert
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(564, 170);
+            this.ClientSize = new System.Drawing.Size(556, 176);
+            this.Controls.Add(this.lblFileConvert);
+            this.Controls.Add(this.progressBarConvert);
             this.Controls.Add(this.btnConvert);
             this.Controls.Add(this.btnChooseOut);
             this.Controls.Add(this.txtOutPut);
@@ -155,5 +175,7 @@ namespace ConvertDocxToPdf
         private System.Windows.Forms.TextBox txtOutPut;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnConvert;
+        private System.Windows.Forms.ProgressBar progressBarConvert;
+        private System.Windows.Forms.Label lblFileConvert;
     }
 }
